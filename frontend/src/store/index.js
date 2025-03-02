@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import categoryReducer from './slices/categorySlice';
 import wordReducer from './slices/wordSlice';
 import challengeReducer from './slices/challengeSlice';
+import progressReducer from './slices/progressSlice';
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     categories: categoryReducer,
     words: wordReducer,
     challenges: challengeReducer,
+    progress: progressReducer,
   },
 });
 

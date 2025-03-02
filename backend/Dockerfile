@@ -5,7 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm install
+RUN npm install multer@1.4.5-lts.1
 
 # Copy the rest of the application
 COPY . .

@@ -93,13 +93,20 @@ mongoose.connection.on('connected', () => {
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 // Static files
-app.use('/uploads', express.static('public/uploads'));
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+app.use('/uploads/images', express.static(path.join(__dirname, '../public/uploads/images')));
+app.use('/uploads/audio', express.static(path.join(__dirname, '../public/uploads/audio')));
 app.use('/images', express.static(path.join(__dirname, '../public/images')));
 app.use('/audio', express.static(path.join(__dirname, '../public/audio')));
 
@@ -113,6 +120,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/words', wordRoutes);
 app.use('/api/challenges', challengeRoutes);
+app.use('/api/progress', require('./routes/progress'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -11,11 +11,6 @@ const wordSchema = new mongoose.Schema({
     required: [true, 'Please provide the meaning'],
     trim: true
   },
-  translation: {
-    type: String,
-    required: [true, 'Please provide the translation'],
-    trim: true
-  },
   category: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
@@ -25,10 +20,10 @@ const wordSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
-  // Pixabay image URLs
+  // Uploaded image path
   imageUrl: {
     type: String,
-    default: null // Will be populated from Pixabay
+    default: null // Will store the path to the uploaded image
   },
   // Learning progress
   learned: {
@@ -49,14 +44,26 @@ const wordSchema = new mongoose.Schema({
     default: 'beginner'
   },
   audioUrl: {
-    type: String, // Can be either a full URL (for CDN/external audio) or a relative path (/audio/word.mp3)
+    type: String, // Stores the path to the uploaded audio file
   },
   pronunciation: {
     type: String,
     trim: true
+  },
+  learnedBy: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'User'
   }
 }, {
   timestamps: true
+});
+
+// For debugging - add a pre-save hook to log learnedBy users
+wordSchema.pre('save', function(next) {
+  if (this.isModified('learnedBy')) {
+    console.log(`Word ${this._id} (${this.word}) - learnedBy updated: ${this.learnedBy.map(id => id.toString()).join(', ')}`);
+  }
+  next();
 });
 
 module.exports = mongoose.model('Word', wordSchema); 

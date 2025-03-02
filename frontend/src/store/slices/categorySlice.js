@@ -1,10 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../../api/axios';
-// Import mock data for development
-import { categories as mockCategories } from '../../data/mockData';
-
-// Helper function to generate unique IDs for mock data
-const generateId = () => `cat-${Math.floor(Math.random() * 10000)}`;
 
 // Async thunks
 export const fetchCategories = createAsyncThunk(

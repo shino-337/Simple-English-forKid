@@ -26,7 +26,7 @@ exports.getDailyChallenge = async (req, res) => {
     }
     
     // If no challenge exists, create one
-    // 1. Get a random category
+    // 1. Get all categories
     const categories = await Category.find({});
     if (categories.length === 0) {
       return res.status(404).json({
@@ -35,26 +35,43 @@ exports.getDailyChallenge = async (req, res) => {
       });
     }
     
-    const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+    // 2. Find a category with at least 2 words
+    let selectedCategory = null;
+    let categoryWords = [];
     
-    // 2. Get words from this category
-    const words = await Word.find({ category: randomCategory._id });
-    if (words.length < 4) {
+    // Try to find a category with at least 4 words
+    for (const category of categories) {
+      const words = await Word.find({ category: category._id });
+      if (words.length >= 4) {
+        selectedCategory = category;
+        categoryWords = words;
+        break;
+      } else if (words.length >= 2 && !selectedCategory) {
+        // Backup: at least 2 words
+        selectedCategory = category;
+        categoryWords = words;
+      }
+    }
+    
+    if (!selectedCategory) {
       return res.status(404).json({
         success: false,
-        message: 'Not enough words in this category for a challenge'
+        message: 'No categories with enough words found'
       });
     }
     
-    // 3. Shuffle the words and select the first one as target, and next 3 as options
-    const shuffledWords = words.sort(() => 0.5 - Math.random());
+    // 3. Shuffle the words 
+    const shuffledWords = categoryWords.sort(() => 0.5 - Math.random());
     const targetWord = shuffledWords[0];
-    const options = shuffledWords.slice(0, 4);
+    
+    // Get options - as many as available up to 4
+    const maxOptions = Math.min(4, shuffledWords.length);
+    const options = shuffledWords.slice(0, maxOptions);
     
     // 4. Create a new challenge
     challenge = await Challenge.create({
       user: req.user.id,
-      category: randomCategory._id,
+      category: selectedCategory._id,
       targetWord: targetWord._id,
       options: options.map(option => option._id),
       date: new Date()

@@ -1,10 +1,8 @@
-const PIXABAY_CONFIG = {
-  API_KEY: '49088238-32d486489b852efc8e19dc25e',
+module.exports = {
+  API_KEY: process.env.PIXABAY_API_KEY || '36696903-d44b9c6c6e9a0c0d9c7f2e2e9',
   BASE_URL: 'https://pixabay.com/api/',
   IMAGE_TYPE: 'photo',
   ORIENTATION: 'horizontal',
   SAFESEARCH: true,
-  PER_PAGE: 3
-};
-
-module.exports = PIXABAY_CONFIG; 
+  PER_PAGE: 5
+}; 

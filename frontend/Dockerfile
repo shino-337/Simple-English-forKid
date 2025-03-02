@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY package*.json ./
 
+# Install dependencies with npm install to ensure package-lock.json is updated
 RUN npm install
 
 COPY . .

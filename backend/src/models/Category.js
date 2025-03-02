@@ -16,6 +16,10 @@ const CategorySchema = new mongoose.Schema({
     type: String,
     default: '📚'
   },
+  color: {
+    type: String,
+    default: '#4F46E5' // Default indigo color
+  },
   difficulty: {
     type: String,
     enum: ['beginner', 'intermediate', 'advanced'],

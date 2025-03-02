@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import useSound from 'use-sound';
 
 // Components
 import Layout from './components/Layout';
@@ -23,7 +24,11 @@ import { getProfile } from './store/slices/authSlice';
 
 function App() {
   const dispatch = useDispatch();
-  const { token } = useSelector(state => state.auth);
+  const { token, user } = useSelector(state => state.auth);
+  
+  const [playCorrect] = useSound('/sounds/success.mp3', { volume: 0.5 });
+  const [playWrong] = useSound('/sounds/flip.mp3', { volume: 0.7 });
+  const [playComplete] = useSound('/sounds/completion.mp3', { volume: 0.7 });
   
   useEffect(() => {
     // Try to load user profile on app start if token exists
